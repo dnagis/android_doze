@@ -36,19 +36,12 @@ import android.util.Log;
  * buttons in the UI.
  * </p>
  * <p>
- * When this service is started, it creates a Runnable and starts it in a new Thread. The
- * Runnable does a synchronized lock on the service's Binder object for 15 seconds, then issues
- * a stopSelf(). The net effect is a new worker thread that takes 15 seconds to run and then
- * shuts down the entire service. The activity restarts the service after 15 more seconds, when the
- * countdown timer triggers again.
+ * When this service is started, ça passe dans onCreate et onStartCommand, dans les deux j'arrête le schmilblik avec
+ * un stopSelf(). 
  * </p>
  * <p>
- * This service is provided as the service under test for the sample test application
- * AlarmServiceTest.
- * </p>
- * <p>
- * Note: Since this sample is based on the Android 1.5 platform, it does not implement
- * onStartCommand. See the Javadoc for android.app.Service for more details.
+ * Note: le sample d'origine est based on the Android 1.5 platform, it does not implement
+ * onStartCommand. mais j'en ai rajouté pour voir si ça passe dedans.
  * </p>
  */
 public class AlarmService extends Service {
@@ -126,7 +119,7 @@ public class AlarmService extends Service {
      */
     @Override
     public void onCreate() {
-		Log.d(TAG, "AlarmService: OnCreate");
+		Log.d(TAG, "AlarmServiceVvnx: OnCreate");
         // Gets a handle to the system mNotification service.
         //mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
@@ -143,7 +136,18 @@ public class AlarmService extends Service {
         );*/
         // Starts the thread
         //mWorkThread.start();
+        
+        // Stops the current service. In response, Android calls onDestroy().
+        //je le mets là car j'appelle plus le runnable
+        stopSelf();
     }
+    
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d(TAG, "AlarmServiceVvnx: OnStartCommand");
+		stopSelf();
+		return START_NOT_STICKY;
+	}
 
     /**
      * Stops the service in response to the stopSelf() issued when the wait is over. Other
@@ -152,6 +156,8 @@ public class AlarmService extends Service {
      */
     @Override
     public void onDestroy() {
+		
+		Log.d(TAG, "AlarmServiceVvnx: OnDestroy");
         // Cancels the status bar mNotification based on its ID, which is set in showNotification().
         //mNotificationManager.cancel(R.string.alarm_service_started);
 

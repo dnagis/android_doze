@@ -3,6 +3,16 @@
  * 
  * adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk
  * 
+ * 
+ * ****ToDo*****
+ * Pour les tests: est il possible de forcer le passage en doze?
+ * 		est ce que le doze est cohérent: bloque les wakealarms sans whitelisting?
+ * Faut il refaire le whitelisting à chaque nouvelle install ou est ce que ça dépend uniquement du nom?
+ * Est ce que le système de notification est indispensable?
+ * 
+ * 
+ * 
+ * 
  * Dumpsys alarm montre au bout de qqes minutes: 
  *   u0a102:com.example.android.newalarm +35ms running, 6 wakeups:
     +35ms 6 wakes 6 alarms, last -29s402ms:
@@ -21,12 +31,14 @@
 * dumpsys deviceidle help
 * dumpsys deviceidle whitelist
 * 
-* dumpsys deviceidle whitelist -com.android.demo.jobSchedulerApp
-* 
-* 
+* dumpsys deviceidle whitelist -com.android.demo.jobSchedulerApp* 
 * dumpsys deviceidle whitelist +com.example.android.newalarm
 * 
 * mDeviceIdleUserWhitelist=[10104]
+* 
+* 
+* 
+* 
 * 
 
  */

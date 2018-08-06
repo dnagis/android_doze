@@ -162,11 +162,11 @@ public class AlarmService extends Service {
         //mNotificationManager.cancel(R.string.alarm_service_started);
 
         // Sends a notification to the screen.
-        Toast.makeText(
+        /*Toast.makeText(
             this,  // the current context
             R.string.alarm_service_finished,  // the message to show
             Toast.LENGTH_LONG   // how long to keep the message on the screen
-        ).show();  // show the text
+        ).show();*/  // show the text
     }
 
     // Returns the service's binder object to clients that issue onBind().

@@ -63,37 +63,19 @@ public class AlarmService extends Service {
      */
 
     // The NotificationManager used to send notifications to the status bar.
-    NotificationManager mNotificationManager;
+    //NotificationManager mNotificationManager;
 
     // An Intent that displays the client if the user clicks the notification.
-    PendingIntent mContentIntent;
+    //PendingIntent mContentIntent;
 
     // A Notification to send to the Notification Manager when the service is started.
-    Notification mNotification;
+    //Notification mNotification;
 
     // A Binder, used as the lock object for the worker thread.
     IBinder mBinder = new AlarmBinder();
 
     // A Thread object that will run the background task
-    Thread mWorkThread;
-
-	/*
-    Runnable mWorkTask = new Runnable() {
-        public void run() {
-  
-            long waitTime = System.currentTimeMillis() + WAIT_TIME_SECONDS * MILLISECS_PER_SEC;
-            while (System.currentTimeMillis() < waitTime) {
-                synchronized (mBinder) {
-                    try {
-                        mBinder.wait(waitTime - System.currentTimeMillis());
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-            // Stops the current service. In response, Android calls onDestroy().
-            stopSelf();
-        }
-    };*/
+    //Thread mWorkThread;
 
     /**
      *  Makes a full concrete subclass of Binder, rather than doing it in line, for readability.
@@ -119,26 +101,6 @@ public class AlarmService extends Service {
      */
     @Override
     public void onCreate() {
-		Log.d(TAG, "AlarmServiceVvnx: OnCreate");
-        // Gets a handle to the system mNotification service.
-        //mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
-        // Updates the status bar to indicate that this service is running.
-        //showNotification();
-
-        // Creates a new thread. A new thread is used so that the service's work doesn't block
-        // anything on the calling client's thread. By default, a service runs in the same
-        // process and thread as the client that starts it.
-        /*mWorkThread = new Thread(
-            null,  // threadgroup (in this case, null)
-            mWorkTask, // the Runnable that will run in this thread
-            ALARM_SERVICE_THREAD
-        );*/
-        // Starts the thread
-        //mWorkThread.start();
-        
-        // Stops the current service. In response, Android calls onDestroy().
-        //je le mets là car j'appelle plus le runnable
         stopSelf();
     }
     
@@ -155,60 +117,30 @@ public class AlarmService extends Service {
      * the service object.
      */
     @Override
-    public void onDestroy() {
-		
-		Log.d(TAG, "AlarmServiceVvnx: OnDestroy");
-        // Cancels the status bar mNotification based on its ID, which is set in showNotification().
-        //mNotificationManager.cancel(R.string.alarm_service_started);
+    public void onDestroy() {		
+		//Log.d(TAG, "AlarmServiceVvnx: OnDestroy");		
+	 }
 
-        // Sends a notification to the screen.
-        /*Toast.makeText(
-            this,  // the current context
-            R.string.alarm_service_finished,  // the message to show
-            Toast.LENGTH_LONG   // how long to keep the message on the screen
-        ).show();*/  // show the text
-    }
-
-    // Returns the service's binder object to clients that issue onBind().
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
-    /**
-     * Displays a notification in the status bar that this service is running. This method
-     * also creates an Intent for the AlarmActivity client and attaches it to the notification
-     * line. If the user clicks the line in the expanded status window, the Intent triggers
-     * AlarmActivity.
-     */
-    private void showNotification() {
-        // Sets the text to use for the status bar and status list views.
-        CharSequence notificationText = getText(R.string.alarm_service_started);
 
-        // Sets up the Intent that starts AlarmActivity
-        mContentIntent = PendingIntent.getActivity(
-            this,  // Start the Activity in the current context
-            0,   // not used
-            new Intent(this, AlarmActivity.class),  // A new Intent for AlarmActivity
-            0  // Use an existing activity instance if available
-        );
-
-        // Build the notification object.
-        mNotification = new Notification.Builder(this)  //  The builder requires the context
-                .setSmallIcon(R.drawable.stat_sample)  // the status icon
-                .setTicker(notificationText)  // the status text
-                .setWhen(System.currentTimeMillis())  // the time stamp
-                .setContentTitle(getText(R.string.alarm_service_label))  // the label of the entry
-                .setContentText(notificationText)  // the contents of the entry
-                .setContentIntent(mContentIntent)  // The intent to send when the entry is clicked
+    /*private void showNotification() {
+        CharSequence notificationText = getText(R.string.alarm_service_started);        
+        mContentIntent = PendingIntent.getActivity(this, 0, new Intent(this, AlarmActivity.class), 0);
+        mNotification = new Notification.Builder(this)  
+                .setSmallIcon(R.drawable.stat_sample) 
+                .setTicker(notificationText) 
+                .setWhen(System.currentTimeMillis()) 
+                .setContentTitle(getText(R.string.alarm_service_label)) 
+                .setContentText(notificationText) 
+                .setContentIntent(mContentIntent) 
                 .build();
-
-        // Sets a unique ID for the notification and sends it to NotificationManager to be
-        // displayed. The ID is the integer marker for the notification string, which is
-        // guaranteed to be unique within the entire application.
         mNotificationManager.notify(
-            R.string.alarm_service_started,  // unique id for the mNotification
-            mNotification   // the mNotification object
+            R.string.alarm_service_started,
+            mNotification
         );
-    }
+    }*/
 }

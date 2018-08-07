@@ -1,30 +1,24 @@
 /*
- * Basé sur development/samples/Alarm
- * 
- * adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk
- * 
- * 
- * ****ToDo*****
- * Pour les tests: est il possible de forcer le passage en doze?
- * 		est ce que le doze est cohérent: bloque les wakealarms sans whitelisting?
- * Faut il refaire le whitelisting à chaque nouvelle install ou est ce que ça dépend uniquement du nom?
- * Est ce que le système de notification est indispensable?
- * 
- * 
- * 
- * 
- * Dumpsys alarm montre au bout de qqes minutes: 
- *   u0a102:com.example.android.newalarm +35ms running, 6 wakeups:
-    +35ms 6 wakes 6 alarms, last -29s402ms:
-      *walarm*:com.example.android.newalarm/.AlarmService
+* Basé sur development/samples/Alarm
+* 
+* adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk
 * 
 * 
-* logcat -s AlarmVvnx
+* ****ToDo*****
+* Faut il refaire le whitelisting à chaque nouvelle install ou est ce que ça dépend uniquement du nom?
+* Est ce que le système de notification est indispensable?
+* Est ce que si tu vires la fenêtre de l'appli du menu on garde l'alarm?
 * 
-* AlarmManager --> fw->bas/services/core/java/.../server/AlarmManagerService.java
 * 
 * 
-* Essais Whitelist
+* 
+* 
+* #marche même connecté par adb
+* dumpsys deviceidle force-idle -> on force en idle et si pas whitelisté pas d'alarm-> OK pour tests
+* dumpsys deviceidle unforce -> on revient au fonctionnement normal
+* 
+* ****Whitelist (wl)
+* Je pense que c'est au moment où tu mAlarmManager.setRepeating() que l'état "whitelist ou pas" est important 
 * dumpsys alarm
 * mDeviceIdleUserWhitelist  --> mDeviceIdleUserWhitelist=[10099]
 * 
@@ -33,8 +27,29 @@
 * 
 * dumpsys deviceidle whitelist -com.android.demo.jobSchedulerApp* 
 * dumpsys deviceidle whitelist +com.example.android.newalarm
+* dumpsys deviceidle whitelist -com.example.android.newalarm
 * 
-* mDeviceIdleUserWhitelist=[10104]
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* Dumpsys alarm montre au bout de qqes minutes: 
+*   u0a102:com.example.android.newalarm +35ms running, 6 wakeups:
++35ms 6 wakes 6 alarms, last -29s402ms:
+  *walarm*:com.example.android.newalarm/.AlarmService
+* 
+* 
+* logcat -s AlarmVvnx
+* 
+* AlarmManager --> fw->bas/services/core/java/.../server/AlarmManagerService.java
+* 
+* 
+
 * 
 * 
 * 
@@ -70,7 +85,7 @@ import android.widget.Toast;
 
 public class AlarmActivity extends Activity {
     // 30 seconds in milliseconds
-    private static final long THIRTY_SECONDS_MILLIS = 61 * 1000;
+    private static final long THIRTY_SECONDS_MILLIS = 900 * 1000;
 
     // An intent for AlarmService, to trigger it as if the Activity called startService().
     private PendingIntent mAlarmSender;

@@ -1,14 +1,16 @@
 /*
-* Basé sur development/samples/Alarm
+* Basé sur development/samples/Alarm, créer un dir dans samples/
+* il n'y a pas d'Android.mk dans Alarm j'en ai copié un d'un dir à côté, modif le nom de local pkg et ça marche très bien
 * 
+* adb uninstall com.example.android.newalarm #si previous install
 * adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk
 * 
 * 
 * ****ToDo*****
-* Faut il refaire le whitelisting à chaque nouvelle install ou est ce que ça dépend uniquement du nom?
 * Est ce que le système de notification est indispensable?
 * Est ce que si tu vires la fenêtre de l'appli du menu on garde l'alarm?
-* 
+* Faire des réglages de contentProvider Settings.Global.DEVICE_IDLE_CONSTANTS (DeviceIdleController.java dans le server dans frameworks)
+* 	settings ...
 * 
 * 
 * 
@@ -19,6 +21,7 @@
 * 
 * ****Whitelist (wl)
 * Je pense que c'est au moment où tu mAlarmManager.setRepeating() que l'état "whitelist ou pas" est important 
+* Il faut le refaire à chaque nouvelle install je pense car à l'uninstall de com.example.android.newalarm je n'ai plus rien dans dumpsys deviceidle whitelist
 * dumpsys alarm
 * mDeviceIdleUserWhitelist  --> mDeviceIdleUserWhitelist=[10099]
 * 

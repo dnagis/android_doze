@@ -9,8 +9,15 @@
 * ****ToDo*****
 * Est ce que le système de notification est indispensable?
 * Est ce que si tu vires la fenêtre de l'appli du menu on garde l'alarm?
+* 
+* 
+* 
 * Faire des réglages de contentProvider Settings.Global.DEVICE_IDLE_CONSTANTS (DeviceIdleController.java dans le server dans frameworks)
-* 	settings ...
+*   mConstants = new Constants(mHandler, getContext().getContentResolver());
+* 		donc c'est du content provider pour accéder à tout les settings
+*   dumpsys deviceidle -> au début: current settings visibles
+* 	settings get global device_idle_constants -> tant que t'as rien rajouté ya des defaults probablement mais tu les vois pas.
+*   settings put global device_idle_constants inactive_to=700000,sensing_to=180000
 * 
 * 
 * 

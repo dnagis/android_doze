@@ -1,6 +1,8 @@
 /*
 * Basé sur development/samples/Alarm, créer un dir dans samples/
 * il n'y a pas d'Android.mk dans Alarm j'en ai copié un d'un dir à côté, modif le nom de local pkg et ça marche très bien
+* copier le dir Alarm/res/ (sinon erreurs du type "AlarmVvnx/src/com/example/android/newalarm/AlarmActivity.java:125.24: R cannot be resolved to a variable")
+* marche en lunch aosp_arm64 et lineage_mido
 * 
 * adb uninstall com.example.android.newalarm #si previous install
 * adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk

@@ -5,7 +5,8 @@
 * marche en lunch aosp_arm64 et lineage_mido
 * 
 * adb uninstall com.example.android.newalarm 
-* ou (si system app)
+* 
+* ou (si installé en system app)
 * rm /system/app/AlarmVvnx/AlarmVvnx.apk
 * rm -rf /data/data/com.example.android.newalarm/
 * reboot
@@ -17,7 +18,13 @@
 * 
 * logcat -s AlarmVvnx
 * 
+* ToDo
+* Comment se passer de lancer une fenêtre quand on lance une activity en shell?
+* Comment arrêter via shell? (i.e. lancer mAlarmManager.cancel(mAlarmSender);)
 * 
+* 
+* 
+* ***Anciennes notes***
 * 
 * Faire des réglages de contentProvider Settings.Global.DEVICE_IDLE_CONSTANTS (DeviceIdleController.java dans le server dans frameworks)
 *   mConstants = new Constants(mHandler, getContext().getContentResolver());
@@ -25,10 +32,7 @@
 *   dumpsys deviceidle -> au début: current settings visibles
 * 	settings get global device_idle_constants -> tant que t'as rien rajouté ya des defaults probablement mais tu les vois pas.
 *   settings put global device_idle_constants inactive_to=700000,sensing_to=180000
-* 
-* 
-* 
-* 
+*  
 * #marche même connecté par adb
 * dumpsys deviceidle force-idle -> on force en idle et si pas whitelisté pas d'alarm-> OK pour tests
 * dumpsys deviceidle unforce -> on revient au fonctionnement normal
@@ -84,7 +88,9 @@ public class AlarmActivity extends Activity {
 	
 	private static final String TAG = "AlarmVvnx";
 	
-    // 30 seconds in milliseconds
+    // 30 seconds in milliseconds 
+    //de toutes façons en dessous de 60s: W AlarmManager: Suspiciously short interval 30000 millis; expanding to 60 seconds
+
     private static final long THIRTY_SECONDS_MILLIS = 30 * 1000;
 
     // An intent for AlarmService, to trigger it as if the Activity called startService().
@@ -95,16 +101,16 @@ public class AlarmActivity extends Activity {
 
     /**
      * This method is called when Android starts the activity. 
-     * <p>
-     * This method is automatically called when Android starts the Activity
-     * </p>
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "AlarmSActivity Vvnx:  onCreate()");
+				
+		//sinon E AndroidRuntime: android.util.SuperNotCalledException: Activity {com.example.android.newalarm/com.example.android.newalarm.AlarmActivity} did not call through to super.onCreate()
+		//mais ça lance une fenêtre: fait chier+++
+		super.onCreate(savedInstanceState);
 		
-        //super.onCreate(savedInstanceState);
-
+		Log.d(TAG, "AlarmActivity **Vvnx**:  onCreate()");
+		
         // Create a PendingIntent to trigger a startService() for AlarmService
         mAlarmSender = PendingIntent.getService(  // set up an intent for a call to a service (voir dev guide intents à "Using a pending intent")
             AlarmActivity.this,  // the current context
@@ -112,7 +118,6 @@ public class AlarmActivity extends Activity {
             new Intent(AlarmActivity.this, AlarmService.class),  // A new Service intent 'c'est un intent explicite'
             0   // flags (none are required for a service)
         );
-
 
         // Gets the handle to the system alarm service
         mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
@@ -128,48 +133,10 @@ public class AlarmActivity extends Activity {
         
     }
 
-    // Creates a new anonymous click listener for the start button. It starts the repeating
-    //  countdown timer.
-    private OnClickListener mStartAlarmListener = new OnClickListener() {
-        // Sets the callback for when the button is clicked
-        public void onClick(View v) {
-
-            // Sets the time when the alarm will first go off
-            // The Android AlarmManager uses this form of the current time.
-            long firstAlarmTime = SystemClock.elapsedRealtime();
-
-            // Sets a repeating countdown timer that triggers AlarmService
-            mAlarmManager.setRepeating(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP, // based on time since last wake up
-                firstAlarmTime,  // sends the first alarm immediately
-                THIRTY_SECONDS_MILLIS,  // repeats every thirty seconds
-                mAlarmSender  // when the alarm goes off, sends this Intent
-            );
-
-            // Notifies the user that the repeating countdown timer has been started
-            Toast.makeText(
-                AlarmActivity.this,  //  the current context
-                R.string.repeating_started,  // the message to display
-                Toast.LENGTH_LONG  // how long to display the message
-            ).show();  // show the message on the screen
-        }
-    };
-
-    // Creates a new anonymous click listener for the stop button. It shuts off the repeating
-    // countdown timer.
-    private OnClickListener mStopAlarmListener = new OnClickListener() {
-        // Sets the callback for when the button is clicked
-        public void onClick(View v) {
-
-            // Cancels the repeating countdown timer
+    //Shuts off the repeating countdown timer.
+	private void stopAlarm() {
+		    // Cancels the repeating countdown timer
             mAlarmManager.cancel(mAlarmSender);
+	};
 
-            // Notifies the user that the repeating countdown timer has been stopped
-            Toast.makeText(
-                AlarmActivity.this,  //  the current context
-                R.string.repeating_stopped,  // the message to display
-                Toast.LENGTH_LONG  // how long to display the message
-            ).show(); // display the message
-        }
-    };
 }

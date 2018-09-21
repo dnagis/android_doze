@@ -13,14 +13,18 @@
 * 
 * adb install out/target/product/mido/system/app/AlarmVvnx/AlarmVvnx.apk
 * 
-* lancement en shell sans se faire chier avec une UI:
+* #lancement en shell sans se faire chier avec une UI:
 * am start-activity com.example.android.newalarm/.AlarmActivity
+* 
+* #arrêter
+* am force-stop com.example.android.newalarm
 * 
 * logcat -s AlarmVvnx
 * 
 * ToDo
 * Comment se passer de lancer une fenêtre quand on lance une activity en shell?
 * Comment arrêter via shell? (i.e. lancer mAlarmManager.cancel(mAlarmSender);)
+* 	am force-stop com.example.android.newalarm
 * 
 * 
 * 

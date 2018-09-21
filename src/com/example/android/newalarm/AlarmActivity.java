@@ -4,13 +4,18 @@
 * copier le dir Alarm/res/ (sinon erreurs du type "AlarmVvnx/src/com/example/android/newalarm/AlarmActivity.java:125.24: R cannot be resolved to a variable")
 * marche en lunch aosp_arm64 et lineage_mido
 * 
-* adb uninstall com.example.android.newalarm #si previous install
-* adb install out/target/product/generic_arm64/system/app/AlarmVvnx/AlarmVvnx.apk
+* adb uninstall com.example.android.newalarm 
+* ou (si system app)
+* rm /system/app/AlarmVvnx/AlarmVvnx.apk
+* rm -rf /data/data/com.example.android.newalarm/
+* reboot
 * 
+* adb install out/target/product/mido/system/app/AlarmVvnx/AlarmVvnx.apk
 * 
-* ****ToDo*****
-* Est ce que le système de notification est indispensable?
-* Est ce que si tu vires la fenêtre de l'appli du menu on garde l'alarm?
+* lancement en shell sans se faire chier avec une UI:
+* am start-activity com.example.android.newalarm/.AlarmActivity
+* 
+* logcat -s AlarmVvnx
 * 
 * 
 * 
@@ -37,18 +42,8 @@
 * dumpsys deviceidle help
 * dumpsys deviceidle whitelist
 * 
-* dumpsys deviceidle whitelist -com.android.demo.jobSchedulerApp* 
 * dumpsys deviceidle whitelist +com.example.android.newalarm
 * dumpsys deviceidle whitelist -com.example.android.newalarm
-* 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
 * 
 * Dumpsys alarm montre au bout de qqes minutes: 
 *   u0a102:com.example.android.newalarm +35ms running, 6 wakeups:
@@ -56,7 +51,6 @@
   *walarm*:com.example.android.newalarm/.AlarmService
 * 
 * 
-* logcat -s AlarmVvnx
 * 
 * AlarmManager --> fw->bas/services/core/java/.../server/AlarmManagerService.java
 * 
@@ -83,21 +77,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-/**
- * This is the activity that controls AlarmService.
- * <p>
- * When the user clicks the "Start Alarm Service" button, it triggers a repeating countdown
- * timer. Every thirty seconds, the timer starts AlarmService, et là j'ai modifié: il logge un truc et lance directos StopSelf()
- * donc s'éteint
- * </p>
- * <p>
- * When the user clicks the "Stop Alarm Service" button, it stops the countdown timer.
- * </p>
- */
+import android.util.Log;
+
 
 public class AlarmActivity extends Activity {
+	
+	private static final String TAG = "AlarmVvnx";
+	
     // 30 seconds in milliseconds
-    private static final long THIRTY_SECONDS_MILLIS = 900 * 1000;
+    private static final long THIRTY_SECONDS_MILLIS = 30 * 1000;
 
     // An intent for AlarmService, to trigger it as if the Activity called startService().
     private PendingIntent mAlarmSender;
@@ -106,14 +94,16 @@ public class AlarmActivity extends Activity {
     private AlarmManager mAlarmManager;
 
     /**
-     * This method is called when Android starts the activity. It initializes the UI.
+     * This method is called when Android starts the activity. 
      * <p>
      * This method is automatically called when Android starts the Activity
      * </p>
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		Log.d(TAG, "AlarmSActivity Vvnx:  onCreate()");
+		
+        //super.onCreate(savedInstanceState);
 
         // Create a PendingIntent to trigger a startService() for AlarmService
         mAlarmSender = PendingIntent.getService(  // set up an intent for a call to a service (voir dev guide intents à "Using a pending intent")
@@ -123,23 +113,19 @@ public class AlarmActivity extends Activity {
             0   // flags (none are required for a service)
         );
 
-        // Creates the main view
-        setContentView(R.layout.main);
-
-        // Finds the button that starts the repeating countdown timer
-        Button button = (Button)findViewById(R.id.start_alarm);
-
-        // Sets the listener for the start button
-        button.setOnClickListener(mStartAlarmListener);
-
-        // Finds the button that stops countdown timer
-        button = (Button)findViewById(R.id.stop_alarm);
-
-        // Sets the listener for the stop button
-        button.setOnClickListener(mStopAlarmListener);
 
         // Gets the handle to the system alarm service
         mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        
+        long firstAlarmTime = SystemClock.elapsedRealtime();
+        
+        mAlarmManager.setRepeating(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP, // based on time since last wake up
+                firstAlarmTime,  // sends the first alarm immediately
+                THIRTY_SECONDS_MILLIS,  // repeats every thirty seconds
+                mAlarmSender  // when the alarm goes off, sends this Intent
+            );        
+        
     }
 
     // Creates a new anonymous click listener for the start button. It starts the repeating

@@ -106,7 +106,7 @@ public class AlarmService extends Service {
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(TAG, "AlarmServiceVvnx: OnStartCommand");
+		Log.d(TAG, "AlarmServiceVvnx:  OnStartCommand");
 		stopSelf();
 		return START_NOT_STICKY;
 	}

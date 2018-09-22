@@ -22,9 +22,7 @@
 * logcat -s AlarmVvnx
 * 
 * ToDo
-* Comment se passer de lancer une fenêtre quand on lance une activity en shell?
-* Comment arrêter via shell? (i.e. lancer mAlarmManager.cancel(mAlarmSender);)
-* 	am force-stop com.example.android.newalarm
+* installer sur un telephone non rooté
 * 
 * 
 * 
@@ -80,10 +78,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.Toast;
 
 import android.util.Log;
 
@@ -92,10 +86,10 @@ public class AlarmActivity extends Activity {
 	
 	private static final String TAG = "AlarmVvnx";
 	
-    // 30 seconds in milliseconds 
+    // 30 * 1000 = 30 seconds in milliseconds 
     //de toutes façons en dessous de 60s: W AlarmManager: Suspiciously short interval 30000 millis; expanding to 60 seconds
 
-    private static final long THIRTY_SECONDS_MILLIS = 30 * 1000;
+    private static final long PERIODE_MS = 300 * 1000;
 
     // An intent for AlarmService, to trigger it as if the Activity called startService().
     private PendingIntent mAlarmSender;
@@ -110,7 +104,6 @@ public class AlarmActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 				
 		//sinon E AndroidRuntime: android.util.SuperNotCalledException: Activity {com.example.android.newalarm/com.example.android.newalarm.AlarmActivity} did not call through to super.onCreate()
-		//mais ça lance une fenêtre: fait chier+++
 		super.onCreate(savedInstanceState);
 		
 		Log.d(TAG, "AlarmActivity **Vvnx**:  onCreate()");
@@ -131,7 +124,7 @@ public class AlarmActivity extends Activity {
         mAlarmManager.setRepeating(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP, // based on time since last wake up
                 firstAlarmTime,  // sends the first alarm immediately
-                THIRTY_SECONDS_MILLIS,  // repeats every thirty seconds
+                PERIODE_MS,  // repeats every XX
                 mAlarmSender  // when the alarm goes off, sends this Intent
             );        
         

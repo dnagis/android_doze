@@ -34,16 +34,13 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name">
         <!--
-            Declares the activity's class name and visible label. The leading "." indicates
-            that the name should be preceded by the application's Android package name.
+            Declares the activity's class The leading "." indicates that the name should be preceded by the application's Android package name.
+         theme no display: permet de pas avoir d'écran, donc se démarre:
+         am start-activity com.example.android.newalarm/.AlarmActivity
          -->
         <activity
             android:name=".AlarmActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@android:style/Theme.NoDisplay">
         </activity>
         <service
             android:name=".AlarmService"

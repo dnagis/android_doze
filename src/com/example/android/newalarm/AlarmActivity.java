@@ -89,7 +89,7 @@ public class AlarmActivity extends Activity {
     // 30 * 1000 = 30 seconds in milliseconds 
     //de toutes façons en dessous de 60s: W AlarmManager: Suspiciously short interval 30000 millis; expanding to 60 seconds
 
-    private static final long PERIODE_MS = 300 * 1000;
+    private static final long PERIODE_MS = 62 * 1000;
 
     // An intent for AlarmService, to trigger it as if the Activity called startService().
     private PendingIntent mAlarmSender;

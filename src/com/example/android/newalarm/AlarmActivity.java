@@ -1,8 +1,12 @@
 /*
-* Basé sur development/samples/Alarm, créer un dir dans samples/
-* il n'y a pas d'Android.mk dans Alarm j'en ai copié un d'un dir à côté, modif le nom de local pkg et ça marche très bien
-* copier le dir Alarm/res/ (sinon erreurs du type "AlarmVvnx/src/com/example/android/newalarm/AlarmActivity.java:125.24: R cannot be resolved to a variable")
+* Basé sur development/samples/Alarm, créer un dir dans samples (style samples/AlarmVvnx)
+* 
+* Il n'y a pas d'Android.mk dans Alarm j'en ai copié un d'un dir à côté, modif le nom de local pkg et ça marche très bien
+* copier les dirs Alarm/res/[drawable, values] sinon erreurs ressources à la compil du type "R cannot be resolved to a variable" / "No resource found that matches the given name"
+* 
 * marche en lunch aosp_arm64 et lineage_mido
+* 
+* make AlarmVvnx
 * 
 * adb uninstall com.example.android.newalarm 
 * 
